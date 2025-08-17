@@ -1,0 +1,101 @@
+<!-- static/index.html -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>AI Test Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+
+        input[type="text"] {
+            width: 400px;
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #0055cc;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0033aa;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            margin-top: 20px;
+            font-family: Consolas, monospace;
+        }
+
+        #downloadLink {
+            display: block;
+            margin-top: 15px;
+            padding: 10px;
+            background: #2e7d32;
+            color: white;
+            text-align: center;
+            width: fit-content;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🧪 AI Test Script Generator</h1>
+    <p>Enter any website URL (e.g., https://www.saucedemo.com):</p>
+    <input type="text" id="urlInput" placeholder="https://example.com" />
+    <button onclick="generate()">Generate Test Code</button>
+    <pre id="output"></pre>
+    <a id="downloadLink" style="display:none;">Download test_auto.py</a>
+
+    <script>
+        async function generate() {
+            const url = document.getElementById("urlInput").value.trim();
+            if (!url) {
+                alert("Please enter a URL");
+                return;
+            }
+
+            const res = await fetch("/generate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url })
+            });
+
+            const data = await res.json();
+
+            if (data.error) {
+                document.getElementById("output").textContent = "Error: " + data.error;
+                return;
+            }
+
+            const code = data.code;
+            document.getElementById("output").textContent = code;
+
+            // Create download link
+            const blob = new Blob([code], { type: "text/x-python" });
+            const href = URL.createObjectURL(blob);
+            const a = document.getElementById("downloadLink");
+            a.href = href;
+            a.download = data.filename || "test_auto.py";
+            a.style.display = "block";
+            a.innerText = "✅ Download " + (data.filename || "test_auto.py");
+        }
+    </script>
+</body>
+
+</html>
