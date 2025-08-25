@@ -1,13 +1,3 @@
-
----
-
-### 2. 📄 `requirements.txt` (Required for Python Projects)
-
-This tells others what packages to install.
-
-#### Create `requirements.txt`:
-
-```txt
 fastapi
 uvicorn
 requests
