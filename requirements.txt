@@ -1,5 +1,4 @@
 fastapi
 starlette
-uvicorn       # optional for local testing, Vercel provides the runtime
-requests
-beautifulsoup4   # if you use it
+uvicorn
+beautifulsoup4
